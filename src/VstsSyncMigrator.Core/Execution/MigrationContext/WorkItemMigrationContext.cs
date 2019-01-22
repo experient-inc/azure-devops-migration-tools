@@ -200,7 +200,7 @@ namespace VstsSyncMigrator.Engine
         {
             Stopwatch fieldMappingTimer = new Stopwatch();
 
-            Trace.Write("... Building", "WorkItemMigrationContext");
+            Trace.WriteLine("... Building", "WorkItemMigrationContext");
 
             var NewWorkItemstartTime = DateTime.UtcNow;
             Stopwatch NewWorkItemTimer = new Stopwatch();

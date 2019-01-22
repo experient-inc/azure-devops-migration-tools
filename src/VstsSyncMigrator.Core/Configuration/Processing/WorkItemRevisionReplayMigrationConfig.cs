@@ -11,6 +11,7 @@ namespace VstsSyncMigrator.Engine.Configuration.Processing
         public bool PrefixProjectToNodes { get; set; }
         public bool UpdateSoureReflectedId { get; set; }
         public bool AppendMigrationToolSignatureFooter { get; set; }
+        public Dictionary<string, string> AreaPathMaps { get; set; }
         public Type Processor
         {
             get

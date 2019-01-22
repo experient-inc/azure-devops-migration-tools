@@ -258,6 +258,10 @@ namespace VstsSyncMigrator.Engine
 
             newwit.AreaPath = GetNewNodeName(oldWi.AreaPath, oldWi.Project.Name, newwit.Project.Name, newwit.Store, "Area");
             newwit.IterationPath = GetNewNodeName(oldWi.IterationPath, oldWi.Project.Name, newwit.Project.Name, newwit.Store, "Iteration");
+
+            Trace.WriteLine(string.Format("Old AreaPath: '{0}' => New AreaPath: '{1}'.", oldWi.AreaPath, newwit.AreaPath));
+            Trace.WriteLine(string.Format("Old IterationPath: '{0}' => New IterationPath: '{1}'.", oldWi.IterationPath, newwit.IterationPath));
+
             switch (destType)
             {
                 case "Test Case":
@@ -293,21 +297,32 @@ namespace VstsSyncMigrator.Engine
                 _nodeOMatic = new NodeDetecomatic(newStore);
             }
 
+
             // Replace project name with new name (if necessary) and inject nodePath (Area or Iteration) into path for node validation
             string newNodeName = "";
-            if (_config.PrefixProjectToNodes)
+            if (nodePath == "Area" && _config.AreaPathMaps != null && _config.AreaPathMaps.ContainsKey(oldNodeName))
             {
-                newNodeName = $@"{newProjectName}\{nodePath}\{oldNodeName}";
-            } else
+                var pathParts = _config.AreaPathMaps[oldNodeName].Split('\\').ToList();
+                pathParts.Insert(1, nodePath);
+                newNodeName = String.Join("\\", pathParts.ToArray());
+            }
+            else
             {
-                var regex = new Regex(Regex.Escape(oldProjectName));
-                if (oldNodeName.StartsWith($@"{oldProjectName}\{nodePath}"))
+                if (_config.PrefixProjectToNodes)
                 {
-                    newNodeName = regex.Replace(oldNodeName, newProjectName, 1);
+                    newNodeName = $@"{newProjectName}\{nodePath}\{oldNodeName}";
                 }
                 else
                 {
-                    newNodeName = regex.Replace(oldNodeName, $@"{newProjectName}\{nodePath}", 1);
+                    var regex = new Regex(Regex.Escape(oldProjectName));
+                    if (oldNodeName.StartsWith($@"{oldProjectName}\{nodePath}"))
+                    {
+                        newNodeName = regex.Replace(oldNodeName, newProjectName, 1);
+                    }
+                    else
+                    {
+                        newNodeName = regex.Replace(oldNodeName, $@"{newProjectName}\{nodePath}", 1);
+                    }
                 }
             }
 
