@@ -102,9 +102,14 @@ namespace VstsSyncMigrator.Engine
                         {
                             // Find the target git repo
                             GitRepository newGitRepo = null;
-                            var repoNameToLookFor = !string.IsNullOrEmpty(_config.TargetRepository)
-                                ? _config.TargetRepository
-                                : oldGitRepo.Name;
+
+                            string repoNameToLookFor;
+                            if(_config.TargetRepositoryMaps != null && _config.TargetRepositoryMaps.ContainsKey(oldGitRepo.Name))
+                                repoNameToLookFor = _config.TargetRepositoryMaps[oldGitRepo.Name];
+                            else
+                                repoNameToLookFor = !string.IsNullOrEmpty(_config.TargetRepository) ? _config.TargetRepository : oldGitRepo.Name;
+
+                            Trace.WriteLine("Looking for " + repoNameToLookFor);
 
                             // Source and Target project names match
                             if (oldGitRepo.ProjectReference.Name == me.Target.Name)

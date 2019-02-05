@@ -5,6 +5,7 @@ namespace VstsSyncMigrator.Engine.Configuration.Processing
 {
     public class FixGitCommitLinksConfig : ITfsProcessingConfig
     {
+        public Dictionary<string, string> TargetRepositoryMaps { get; set; }
         public string TargetRepository { get; set; }
         public string AreaPathRootFilter { get; set; }
         public bool Enabled { get; set; }
